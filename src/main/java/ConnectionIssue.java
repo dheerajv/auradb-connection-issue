@@ -18,8 +18,14 @@ class ConnectionIssue {
   private static final long PORT = 7687;
   private static final String USER = "neo4j";
   private static final String PASSWORD = "DRsfGQBDnZhJ1Af4xGeZLZBDV2KS-Pou_Ublb0AbNeA";
-  private static final String DB_NAME = "neo4j";
+  private static final String DATABASE = "neo4j";
 
+  static final int DEFAULT_FETCH_SIZE = 1000;
+  static final int DEFAULT_CONNECTION_LIFETIME = 30;
+  static final int DEFAULT_CONNECTION_POOL_SIZE = 50;
+  static final int DEFAULT_CONNECTION_ACQUISITION_TIMEOUT = 2;
+  static final String DRIVER_ROUTING_PREFIX_PLUS_S = "neo4j+s://";
+  
   void reproduceIssue() {
     try (Driver driver = connect()) {
       executeQuery(driver);
@@ -28,7 +34,7 @@ class ConnectionIssue {
 
   private void executeQuery(Driver instance) {
 
-    try (Session session = createNewSession(instance, DB_NAME, AccessMode.READ)) {
+    try (Session session = createNewSession(instance, DATABASE, AccessMode.READ)) {
       for (int i = 0; i < 3; i++) {
 
         try {
@@ -58,12 +64,12 @@ class ConnectionIssue {
   }
 
   private Driver connect() {
-    String uri = Constants.DRIVER_ROUTING_PREFIX_PLUS_S + HOST + ':' + PORT;
+    String uri = DRIVER_ROUTING_PREFIX_PLUS_S + HOST + ':' + PORT;
 
     Config config = Config.builder()
-        .withMaxConnectionLifetime(Constants.DEFAULT_CONNECTION_LIFETIME, TimeUnit.MINUTES)
-        .withMaxConnectionPoolSize(Constants.DEFAULT_CONNECTION_POOL_SIZE)
-        .withConnectionAcquisitionTimeout(Constants.DEFAULT_CONNECTION_ACQUISITION_TIMEOUT, TimeUnit.MINUTES)
+        .withMaxConnectionLifetime(DEFAULT_CONNECTION_LIFETIME, TimeUnit.MINUTES)
+        .withMaxConnectionPoolSize(DEFAULT_CONNECTION_POOL_SIZE)
+        .withConnectionAcquisitionTimeout(DEFAULT_CONNECTION_ACQUISITION_TIMEOUT, TimeUnit.MINUTES)
         .withRoutingTablePurgeDelay(1, TimeUnit.SECONDS)
         .withLogging(Logging.console(Level.INFO))
         .withDriverMetrics()
@@ -76,7 +82,7 @@ class ConnectionIssue {
                                    String database,
                                    AccessMode mode) {
     SessionConfig.Builder sessionBuilder = SessionConfig.builder()
-        .withFetchSize(Constants.DEFAULT_FETCH_SIZE)
+        .withFetchSize(DEFAULT_FETCH_SIZE)
         .withDatabase(database)
         .withDefaultAccessMode(mode);
 

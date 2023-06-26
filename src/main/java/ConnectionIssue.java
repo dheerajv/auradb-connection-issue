@@ -34,9 +34,8 @@ class ConnectionIssue {
 
   private void executeQuery(Driver instance) {
 
-    try (Session session = createNewSession(instance, DATABASE, AccessMode.READ)) {
-      for (int i = 0; i < 10; i++) {
-
+    for (int i = 0; i < 10; i++) {
+      try (Session session = createNewSession(instance, DATABASE, AccessMode.READ)) {
         try {
           String openCypher = "MATCH (n) RETURN id(n) LIMIT 1";
           Result res = session.run(openCypher);

@@ -36,28 +36,25 @@ class ConnectionIssue {
 
     for (int i = 0; i < 10; i++) {
       try (Session session = createNewSession(instance, DATABASE, AccessMode.READ)) {
-        try {
-          String openCypher = "MATCH (n) RETURN id(n) LIMIT 1";
-          Result res = session.run(openCypher);
-          res.forEachRemaining(
-              row -> System.out.println(row.get(0).asLong())
-          );
+        String openCypher = "MATCH (n) RETURN id(n) LIMIT 1";
+        Result res = session.run(openCypher);
+        res.forEachRemaining(
+            row -> System.out.println(row.get(0).asLong())
+        );
 
-          //Mock being idle for 10 minutes after the first query
-          if (i == 0) {
-            int sleepTime = 10;
-            System.out.println(MessageFormat.format("Going to sleep for {0} minutes..", sleepTime));
-            for (int j = 0; j < sleepTime; j++) {
-              System.out.println(MessageFormat.format("Remaining {0} minutes of sleep time..", sleepTime - j));
-              Thread.sleep(60 * 1000);
-            }
-
-            System.out.println("Awake again..");
+        //Mock being idle for 10 minutes after the first query
+        if (i == 0) {
+          int sleepTime = 10;
+          System.out.println(MessageFormat.format("Going to sleep for {0} minutes..", sleepTime));
+          for (int j = 0; j < sleepTime; j++) {
+            System.out.println(MessageFormat.format("Remaining {0} minutes of sleep time..", sleepTime - j));
+            Thread.sleep(60 * 1000);
           }
 
-        } catch (Exception ex) {
-          ex.printStackTrace();
+          System.out.println("Awake again..");
         }
+      } catch (Exception ex) {
+        ex.printStackTrace();
       }
     }
   }

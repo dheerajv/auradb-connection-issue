@@ -21,11 +21,11 @@ class ConnectionIssue {
   private static final String DATABASE = "neo4j";
 
   static final int DEFAULT_FETCH_SIZE = 1000;
-  static final int DEFAULT_CONNECTION_LIFETIME = 30;
+  static final int DEFAULT_CONNECTION_LIFETIME = 50;
   static final int DEFAULT_CONNECTION_POOL_SIZE = 50;
   static final int DEFAULT_CONNECTION_ACQUISITION_TIMEOUT = 2;
   static final String DRIVER_ROUTING_PREFIX_PLUS_S = "neo4j+s://";
-  
+
   void reproduceIssue() {
     try (Driver driver = connect()) {
       executeQuery(driver);
@@ -35,7 +35,7 @@ class ConnectionIssue {
   private void executeQuery(Driver instance) {
 
     try (Session session = createNewSession(instance, DATABASE, AccessMode.READ)) {
-      for (int i = 0; i < 3; i++) {
+      for (int i = 0; i < 10; i++) {
 
         try {
           String openCypher = "MATCH (n) RETURN id(n) LIMIT 1";
@@ -50,7 +50,7 @@ class ConnectionIssue {
             System.out.println(MessageFormat.format("Going to sleep for {0} minutes..", sleepTime));
             for (int j = 0; j < sleepTime; j++) {
               System.out.println(MessageFormat.format("Remaining {0} minutes of sleep time..", sleepTime - j));
-              Thread.sleep(sleepTime * 60 * 1000);
+              Thread.sleep(60 * 1000);
             }
 
             System.out.println("Awake again..");

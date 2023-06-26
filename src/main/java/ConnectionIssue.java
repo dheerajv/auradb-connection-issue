@@ -14,10 +14,10 @@ import java.util.logging.Level;
 
 class ConnectionIssue {
 
-  private static final String HOST = "a1ec17aa.databases.neo4j.io";
+  private static final String HOST = "host-name";
   private static final long PORT = 7687;
   private static final String USER = "neo4j";
-  private static final String PASSWORD = "DRsfGQBDnZhJ1Af4xGeZLZBDV2KS-Pou_Ublb0AbNeA";
+  private static final String PASSWORD = "password";
   private static final String DATABASE = "neo4j";
 
   static final int DEFAULT_FETCH_SIZE = 1000;

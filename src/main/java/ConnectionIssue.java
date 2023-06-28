@@ -1,3 +1,4 @@
+//import org.neo4j.driver.AccessMode;
 import org.neo4j.driver.AccessMode;
 import org.neo4j.driver.AuthTokens;
 import org.neo4j.driver.Config;
@@ -14,7 +15,7 @@ import java.util.logging.Level;
 
 class ConnectionIssue {
 
-  private static final String HOST = "host-name";
+  private static final String HOST = "host name";
   private static final long PORT = 7687;
   private static final String USER = "neo4j";
   private static final String PASSWORD = "password";
@@ -66,8 +67,8 @@ class ConnectionIssue {
         .withMaxConnectionLifetime(DEFAULT_CONNECTION_LIFETIME, TimeUnit.MINUTES)
         .withMaxConnectionPoolSize(DEFAULT_CONNECTION_POOL_SIZE)
         .withConnectionAcquisitionTimeout(DEFAULT_CONNECTION_ACQUISITION_TIMEOUT, TimeUnit.MINUTES)
-        .withRoutingTablePurgeDelay(1, TimeUnit.SECONDS)
         .withLogging(Logging.console(Level.INFO))
+        .withConnectionLivenessCheckTimeout(50, TimeUnit.SECONDS) //Comment this line to reproduce the issue
         .withDriverMetrics()
         .build();
 
